@@ -7,35 +7,55 @@ class CustomTextField extends StatelessWidget {
     required this.hintText,
     this.width,
     required this.labelText,
-    this.icon,
+    required this.onChanged,
+    required this.obscureText,
+    this.validator,
+    this.controller,
   });
 
+  final TextEditingController? controller;
+  final Function(String?) onChanged;
   final String hintText;
   final int? width;
   final String labelText;
-  final Icon? icon;
+  final FormFieldValidator<String>? validator;
+  final bool obscureText;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width?.toDouble() ?? 410,
       child: TextFormField(
+        controller: controller,
+        validator: validator,
         cursorColor: kblue,
-
+        obscureText: obscureText,
         decoration: InputDecoration(
-          floatingLabelStyle: TextStyle(color: kblue),
-          suffixIcon: icon,
+          labelText: labelText,
+          hintText: hintText,
           border: OutlineInputBorder(),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: kblue, width: 2),
           ),
-
-          hintText: hintText,
-          labelText: labelText,
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xffF2B8B5), width: 2),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xffF2B8B5), width: 2),
+          ),
+          floatingLabelStyle: WidgetStateTextStyle.resolveWith((states) {
+            if (states.contains(WidgetState.error)) {
+              return TextStyle(color: Color(0xffF2B8B5));
+            }
+            if (states.contains(WidgetState.focused)) {
+              return TextStyle(color: kblue);
+            }
+            return TextStyle(color: Colors.grey);
+          }),
+          errorStyle: TextStyle(color: Color(0xffF2B8B5), fontSize: 14),
         ),
-        style: TextStyle(
-          fontSize: 18,
-          color: const Color.fromARGB(255, 255, 255, 255),
-        ),
+        style: TextStyle(fontSize: 18, color: Colors.white),
+        onChanged: onChanged,
       ),
     );
   }

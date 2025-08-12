@@ -1,17 +1,26 @@
 import 'package:complete_flutter_api/constants.dart';
 import 'package:flutter/material.dart';
 
-class CustumTextFieldPassword extends StatefulWidget {
-  const CustumTextFieldPassword({super.key});
+class CustomTextFieldPassword extends StatefulWidget {
+  final FormFieldValidator<String>? validator;
+  final Function(String?) onChanged;
+  final TextEditingController? controller;
+  const CustomTextFieldPassword({
+    super.key,
+    required this.onChanged,
+    this.validator,
+    this.controller,
+  });
 
   @override
-  State<CustumTextFieldPassword> createState() =>
-      _CustumTextFieldPasswordState();
+  State<CustomTextFieldPassword> createState() =>
+      _CustomTextFieldPasswordState();
 }
 
-class _CustumTextFieldPasswordState extends State<CustumTextFieldPassword> {
+class _CustomTextFieldPasswordState extends State<CustomTextFieldPassword> {
   final textFieldFocusNode = FocusNode();
-  bool _obscured = false;
+  bool _obscured = true;
+  bool _hasError = false;
 
   void _toggleObscured() {
     setState(() {
@@ -26,30 +35,43 @@ class _CustumTextFieldPasswordState extends State<CustumTextFieldPassword> {
     return SizedBox(
       width: 410,
       child: TextFormField(
+        controller: widget.controller,
+        validator: (value) {
+          final result = widget.validator?.call(value);
+          setState(() {
+            _hasError = result != null && result.isNotEmpty;
+          });
+          return result;
+        },
+        onChanged: widget.onChanged,
         keyboardType: TextInputType.visiblePassword,
         obscureText: _obscured,
         focusNode: textFieldFocusNode,
-
         cursorColor: kblue,
-
         decoration: InputDecoration(
-          floatingLabelStyle: TextStyle(color: kblue),
-
-          border: OutlineInputBorder(),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: kblue, width: 2),
+          floatingLabelStyle: TextStyle(
+            color: _hasError ? Color(0xffF2B8B5) : kblue,
           ),
-          hintText: '',
+          border: const OutlineInputBorder(),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: kblue),
+          ),
+          errorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xffF2B8B5)),
+          ),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xffF2B8B5)),
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+          ),
           labelText: 'Password',
           suffixIcon: IconButton(
-            icon: Icon(_obscured ? Icons.visibility : Icons.visibility_off),
+            icon: Icon(_obscured ? Icons.visibility_off : Icons.visibility),
             onPressed: _toggleObscured,
           ),
         ),
-        style: TextStyle(
-          fontSize: 18,
-          color: const Color.fromARGB(255, 255, 255, 255),
-        ),
+        style: const TextStyle(fontSize: 18, color: Colors.white),
       ),
     );
   }

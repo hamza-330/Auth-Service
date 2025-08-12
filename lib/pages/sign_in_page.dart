@@ -1,30 +1,24 @@
 import 'package:complete_flutter_api/constants.dart';
+import 'package:complete_flutter_api/helper/sign_in_provider.dart';
 
-import 'package:complete_flutter_api/helper/sign_up_provider.dart';
+import 'package:complete_flutter_api/pages/analytics_page.dart';
+import 'package:complete_flutter_api/pages/forget_password.dart';
 
-import 'package:complete_flutter_api/pages/sign_in_page.dart';
-import 'package:complete_flutter_api/service/sign_up_service.dart';
-
+import 'package:complete_flutter_api/pages/sign_up_page.dart';
 import 'package:complete_flutter_api/validators/email_validat.dart';
-import 'package:complete_flutter_api/validators/last_name_validate.dart';
-import 'package:complete_flutter_api/validators/name_validate.dart';
 import 'package:complete_flutter_api/validators/password_validat.dart';
 import 'package:complete_flutter_api/widgets/custom_button.dart';
+
 import 'package:complete_flutter_api/widgets/custom_text_field.dart';
-import 'package:complete_flutter_api/widgets/custum_text_field_password.dart';
+import 'package:complete_flutter_api/widgets/custum_text_field_password.dart'
+    show CustomTextFieldPassword;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
-  static String id = 'signUpPage';
-  @override
-  State<SignUpPage> createState() => _SignUpPageState();
-}
-
-class _SignUpPageState extends State<SignUpPage> {
+class SignInPage extends StatelessWidget {
+  SignInPage({super.key});
+  static String id = 'SignInPage';
   final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,46 +37,18 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 10),
               const Center(
                 child: Text(
-                  'Sign Up',
+                  'Sign In',
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 40),
-
-              Row(
-                children: [
-                  CustomTextField(
-                    onChanged: (value) {
-                      if (value == null) return;
-                      context.read<SignUpProvider>().setFirstName(value);
-                    },
-                    hintText: '',
-                    width: 195,
-                    labelText: 'First Name',
-                    validator: validateFirstName,
-                    obscureText: false,
-                  ),
-                  const SizedBox(width: 20),
-                  CustomTextField(
-                    obscureText: false,
-                    onChanged: (value) {
-                      if (value == null) return;
-                      context.read<SignUpProvider>().setLastName(value);
-                    },
-                    hintText: '',
-                    width: 195,
-                    labelText: 'Last Name',
-                    validator: validateLastName,
-                  ),
-                ],
-              ),
 
               const SizedBox(height: 20),
               CustomTextField(
                 obscureText: false,
                 onChanged: (value) {
                   if (value == null) return;
-                  context.read<SignUpProvider>().setEmail(value);
+                  context.read<SignInProvider>().setEmail(value);
                 },
                 hintText: '',
                 labelText: 'Email',
@@ -93,60 +59,55 @@ class _SignUpPageState extends State<SignUpPage> {
               CustomTextFieldPassword(
                 onChanged: (value) {
                   if (value == null) return;
-                  context.read<SignUpProvider>().setPassword(value);
+                  context.read<SignInProvider>().setPassword(value);
                 },
 
                 validator: validatePassword,
               ),
-
-              const SizedBox(height: 20),
-              CustomTextField(
-                obscureText: true,
-                hintText: '',
-                labelText: 'Confirm Password',
-                onChanged: (value) {
-                  if (value == null) return;
-                  context.read<SignUpProvider>().setConfirmPassword(value);
-                },
-                validator: (value) {
-                  if (value != context.read<SignUpProvider>().password) {
-                    return 'Password not match';
-                  } else {
-                    return null;
-                  }
-                },
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, ForgetPassword.id);
+                  },
+                  child: Text(
+                    'Forgot Password?',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: kblue,
+                      decoration: TextDecoration.underline,
+                      decorationColor: kblue,
+                      decorationThickness: 1,
+                    ),
+                  ),
+                ),
               ),
-
-              const SizedBox(height: 40),
+              SizedBox(height: 20),
               CustomButton(
                 onTap: () async {
                   if (_formKey.currentState!.validate()) {
-                    signUpUser(
-                      context.read<SignUpProvider>().email,
-                      context.read<SignUpProvider>().password,
-                      context.read<SignUpProvider>().firstName,
-                      context.read<SignUpProvider>().confirmPassword,
-                      context.read<SignUpProvider>().lastName,
-                    );
+                    Navigator.pushNamed(context, AnalyticsPage.id);
                   } else {
                     print('Form is not valid.');
                   }
                 },
-                text: 'Sign Up',
+                text: 'Sign In',
               ),
 
               const SizedBox(height: 20),
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, SignInPage.id);
+                    Navigator.pop(context, SignUpPage.id);
                   },
                   child: Text(
-                    'Already have an account?',
+                    'Don\'t have an account? Sign Up',
                     style: TextStyle(fontSize: 16, color: kblue),
                   ),
                 ),
               ),
+              SizedBox(height: 20),
 
               const SizedBox(height: 50),
               Center(
