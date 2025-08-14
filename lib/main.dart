@@ -34,7 +34,7 @@ class Zuestra extends StatelessWidget {
         SignUpPage.id: (context) => SignUpPage(),
         SignInPage.id: (context) => SignInPage(),
         ForgetPassword.id: (context) => ForgetPassword(),
-        AnalyticsPage.id: (context) => AnalyticsPage(),
+        AnalyticsPage.id: (context) => const AnalyticsPage(),
         SignOutPage.id: (context) => SignOutPage(),
       },
       debugShowCheckedModeBanner: false,

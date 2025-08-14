@@ -1,56 +1,38 @@
 import 'package:complete_flutter_api/constants.dart';
-import 'package:complete_flutter_api/pages/sign_out_page.dart';
+import 'package:complete_flutter_api/helper/sign_in_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class AnalyticsPage extends StatelessWidget {
+class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
   static String id = 'AnalyticsPage';
   @override
+  State<AnalyticsPage> createState() => _AnalyticsPageState();
+}
+
+class _AnalyticsPageState extends State<AnalyticsPage> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<SignInProvider>(context, listen: false).loadUsers();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final user = context.read<SignInProvider>().loggedInUser;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 120, right: 80),
-          child: Row(
-            children: [
-              Image.network(kLogo, height: 50, width: 50),
-              Text('Zuestra'),
-            ],
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(kLogo, width: 40, height: 40),
+            const Text("Zuestra"),
+          ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 700),
-        child: Center(
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Color(0xff2e4b70),
-            elevation: 0,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                label: 'Analytics',
-                icon: IconButton(
-                  color: Colors.white,
-                  hoverColor: Colors.blue,
-                  icon: Icon(Icons.analytics),
-                  onPressed: () {},
-                ),
-              ),
-
-              BottomNavigationBarItem(
-                icon: IconButton(
-                  icon: Icon(Icons.logout),
-                  onPressed: () {
-                    Navigator.pushNamed(context, SignOutPage.id);
-                  },
-                ),
-                label: 'Sign out',
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: Column(children: [Text('${user?['email']}')]),
     );
   }
 }

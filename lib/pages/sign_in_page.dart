@@ -5,6 +5,7 @@ import 'package:complete_flutter_api/pages/analytics_page.dart';
 import 'package:complete_flutter_api/pages/forget_password.dart';
 
 import 'package:complete_flutter_api/pages/sign_up_page.dart';
+import 'package:complete_flutter_api/service/sign_in_service.dart';
 import 'package:complete_flutter_api/validators/email_validat.dart';
 import 'package:complete_flutter_api/validators/password_validat.dart';
 import 'package:complete_flutter_api/widgets/custom_button.dart';
@@ -85,14 +86,37 @@ class SignInPage extends StatelessWidget {
               ),
               SizedBox(height: 20),
               CustomButton(
+                text: 'Sign In',
                 onTap: () async {
                   if (_formKey.currentState!.validate()) {
-                    Navigator.pushNamed(context, AnalyticsPage.id);
-                  } else {
-                    print('Form is not valid.');
+                    final signInProvider = context.read<SignInProvider>();
+
+                    final email = signInProvider.email.trim();
+                    final password = signInProvider.password.trim();
+
+                    final user = await signInUser(email, password);
+
+                    if (user != null) {
+                      signInProvider.loggedInUser = user;
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Login Successful!')),
+                      );
+
+                      signInProvider.setEmail('');
+                      signInProvider.setPassword('');
+
+                      Navigator.pushNamed(context, AnalyticsPage.id);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: kblue,
+                          content: Text('Invalid email or password'),
+                        ),
+                      );
+                    }
                   }
                 },
-                text: 'Sign In',
               ),
 
               const SizedBox(height: 20),

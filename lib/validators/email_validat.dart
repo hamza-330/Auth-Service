@@ -10,6 +10,12 @@ String? validateEmail(String? value) {
   if (!emailRegex.hasMatch(value)) {
     return 'Email is not valid';
   }
+  if (value.trim().length > 30) {
+    return 'Email is too long';
+  }
+  if (value.trim().length < 4) {
+    return 'Email is too short';
+  }
 
   return null;
 }

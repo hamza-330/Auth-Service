@@ -24,6 +24,11 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +57,7 @@ class _SignUpPageState extends State<SignUpPage> {
               Row(
                 children: [
                   CustomTextField(
+                    controller: firstNameController,
                     onChanged: (value) {
                       if (value == null) return;
                       context.read<SignUpProvider>().setFirstName(value);
@@ -64,6 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(width: 20),
                   CustomTextField(
+                    controller: lastNameController,
                     obscureText: false,
                     onChanged: (value) {
                       if (value == null) return;
@@ -79,6 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
               const SizedBox(height: 20),
               CustomTextField(
+                controller: emailController,
                 obscureText: false,
                 onChanged: (value) {
                   if (value == null) return;
@@ -95,7 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   if (value == null) return;
                   context.read<SignUpProvider>().setPassword(value);
                 },
-
+                controller: passwordController,
                 validator: validatePassword,
               ),
 
@@ -115,6 +123,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     return null;
                   }
                 },
+                controller: confirmPasswordController,
               ),
 
               const SizedBox(height: 40),
@@ -122,12 +131,19 @@ class _SignUpPageState extends State<SignUpPage> {
                 onTap: () async {
                   if (_formKey.currentState!.validate()) {
                     signUpUser(
-                      context.read<SignUpProvider>().email,
-                      context.read<SignUpProvider>().password,
-                      context.read<SignUpProvider>().firstName,
-                      context.read<SignUpProvider>().confirmPassword,
-                      context.read<SignUpProvider>().lastName,
+                      context.read<SignUpProvider>().email.toString(),
+                      context.read<SignUpProvider>().password.toString(),
+                      context.read<SignUpProvider>().firstName.toString(),
+                      context.read<SignUpProvider>().confirmPassword.toString(),
+                      context.read<SignUpProvider>().lastName.toString(),
                     );
+                    passwordController.clear();
+                    firstNameController.clear();
+                    lastNameController.clear();
+                    emailController.clear();
+                    confirmPasswordController.clear();
+
+                    Navigator.pushNamed(context, SignInPage.id);
                   } else {
                     print('Form is not valid.');
                   }

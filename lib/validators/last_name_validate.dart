@@ -3,7 +3,6 @@ String? validateLastName(String? value) {
     return null;
   }
 
-  // Only allow letters (a–z or A–Z)
   final nameRegExp = RegExp(r'^[a-zA-Z]+$');
   if (!nameRegExp.hasMatch(value.trim())) {
     return 'Last name must contain letters only';
