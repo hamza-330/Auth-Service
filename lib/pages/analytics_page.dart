@@ -1,5 +1,6 @@
 import 'package:complete_flutter_api/constants.dart';
 import 'package:complete_flutter_api/helper/sign_in_provider.dart';
+import 'package:complete_flutter_api/pages/sign_out_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +33,42 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           ],
         ),
       ),
-      body: Column(children: [Text('${user?['email']}')]),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 400),
+            child: Center(
+              child: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Color(0xff2e4b70),
+                elevation: 0,
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    label: 'Analytics',
+                    icon: IconButton(
+                      color: Colors.white,
+                      hoverColor: Colors.blue,
+                      icon: Icon(Icons.analytics),
+                      onPressed: () {},
+                    ),
+                  ),
+
+                  BottomNavigationBarItem(
+                    icon: IconButton(
+                      icon: Icon(Icons.logout),
+                      onPressed: () {
+                        Navigator.pushNamed(context, SignOutPage.id);
+                      },
+                    ),
+                    label: 'Sign out',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
